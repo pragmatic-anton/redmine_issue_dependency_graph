@@ -1,0 +1,37 @@
+<h3><%=l(:dependency_graph_settings_header)%></h3>
+<p>
+  <%= label_tag('settings[show_relates]', l(:label_relates_to)) %>
+  <%= check_box_tag("settings[show_relates]", nil, @settings["show_relates"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_dublicates]', l(:label_duplicates)) %>
+  <%= check_box_tag("settings[show_dublicates]", nil, @settings["show_dublicates"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_dublicated]', l(:label_duplicated_by)) %>
+  <%= check_box_tag("settings[show_dublicated]", nil, @settings["show_dublicated"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_blocks]', l(:label_blocks)) %>
+  <%= check_box_tag("settings[show_blocks]", nil, @settings["show_blocks"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_blocked]', l(:label_blocked_by)) %>
+  <%= check_box_tag("settings[show_blocked]", nil, @settings["show_blocked"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_precedes]', l(:label_precedes)) %>
+  <%= check_box_tag("settings[show_precedes]", nil, @settings["show_precedes"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_follows]', l(:label_follows)) %>
+  <%= check_box_tag("settings[show_follows]", nil, @settings["show_follows"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_copied_to]', l(:label_copied_to)) %>
+  <%= check_box_tag("settings[show_copied_to]", nil, @settings["show_copied_to"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_copied_from]', l(:label_copied_from)) %>
+  <%= check_box_tag("settings[show_copied_from]", nil, @settings["show_copied_from"]) %>
+</p>

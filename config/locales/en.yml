@@ -1,0 +1,5 @@
+# English strings go here for Rails i18n
+en:
+  relation_graph: "Relations Graph"
+  show_precedes: "Show precedes relations in dependency graphs"
+  dependency_graph_settings_header: "Choose relevant Issue relations:"

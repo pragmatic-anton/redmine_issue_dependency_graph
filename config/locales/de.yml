@@ -1,0 +1,4 @@
+de:
+  relation_graph: "Kritischer Pfad"
+  show_precedes: "Precedes"
+  dependency_graph_settings_header: "Choose relevant Issue relations:"
