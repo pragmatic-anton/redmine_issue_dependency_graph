@@ -66,7 +66,7 @@ class IssueDependencyGraphController < ApplicationController
 				io.puts case ir[:type]
 					when 'blocks'   then "#{ir[:to]} -> #{ir[:from]} [style=solid,  color=red dir=back]"
                     when 'child'    then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=gray dir=back]"
-					when 'precedes' then "#{ir[:to]} -> #{ir[:from]} [style=solid,  color=black dir=back]"
+					when 'precedes' then "#{ir[:from]} -> #{ir[:to]} [style=solid,  color=black dir=from]"
 					when 'relates'  then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=black dir=none]"
                     when 'duplicates' then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=blue dir=from]"
                     when 'duplicated' then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=blue dir=back]"
