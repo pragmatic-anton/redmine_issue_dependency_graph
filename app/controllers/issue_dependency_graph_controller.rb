@@ -59,7 +59,7 @@ class IssueDependencyGraphController < ApplicationController
 				colour = i.closed? ? 'grey' : 'black'
                 state = IssueStatus.find(Issue.find(i.id).status_id).name
                 percent = Issue.find(i.id).done_ratio.to_s
-				io.puts "#{i.id} [label=\"{ #{i.tracker.name}: ##{i.id} | (#{state}, #{percent}% done) | #{render_title(i)}\n}\" shape=Mrecord, fontcolor=#{colour}]"
+				io.puts "#{i.id} [label=\"{ #{i.tracker.name}: ##{i.id} | #{state}, #{percent}% done | #{render_title(i)}\n}\" shape=Mrecord, fontcolor=#{colour}]"
 			end
 
 			relations.each do |ir|
