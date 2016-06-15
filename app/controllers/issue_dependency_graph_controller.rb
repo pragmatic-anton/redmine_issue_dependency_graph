@@ -59,7 +59,7 @@ class IssueDependencyGraphController < ApplicationController
 				colour = i.closed? ? 'grey' : 'black'
                 state = IssueStatus.find(Issue.find(i.id).status_id).name
                 percent = Issue.find(i.id).done_ratio.to_s
-				io.puts "#{i.id} [label=\"{<f0> #{i.tracker.name}: ##{i.id} (#{state}, #{percent}% done)|<f1> #{render_title(i)}\n}\" shape=Mrecord, fontcolor=#{colour}]"
+				io.puts "#{i.id} [label=\"{ #{i.tracker.name}: ##{i.id} | (#{state}, #{percent}% done) | #{render_title(i)}\n}\" shape=Mrecord, fontcolor=#{colour}]"
 			end
 
 			relations.each do |ir|
@@ -80,16 +80,16 @@ class IssueDependencyGraphController < ApplicationController
             #make the Graph Key:
             io.puts "subgraph cluster_02 {
                     label = \"Legende:\"
-                    Vater [label=\"{<f0> Ticket|<f1> Task\n}\" shape=Mrecord, fontcolor=black]
-                    Kind [label=\"{<f0> Ticket|<f1> Subtask\n}\" shape=Mrecord, fontcolor=black]
-                    Vorgaenger [label=\"{<f0> Ticket|<f1> geht vor\n}\" shape=Mrecord, fontcolor=black]
-                    Nachfolger [label=\"{<f0> Ticket|<f1> folgt\n}\" shape=Mrecord, fontcolor=black]
-                    Blockierer [label=\"{<f0> Ticket|<f1> blockiert\n}\" shape=Mrecord, fontcolor=black]
-                    Blockierter [label=\"{<f0> Ticket|<f1> wird\\ngeblockt\n}\" shape=Mrecord, fontcolor=black]
-                    Duplikator [label=\"{<f0> Ticket|<f1> dupliziert\n}\" shape=Mrecord, fontcolor=black]
-                    Duplizierter [label=\"{<f0> Ticket|<f1> Original\n}\" shape=Mrecord, fontcolor=black]
-                    Kopierer [label=\"{<f0> Ticket|<f1> kopiert\n}\" shape=Mrecord, fontcolor=black]
-                    Kopierter [label=\"{<f0> Ticket|<f1> Original\n}\" shape=Mrecord, fontcolor=black]
+                    Vater [label=\"{ Ticket| Task\n}\" shape=Mrecord, fontcolor=black]
+                    Kind [label=\"{ Ticket| Subtask\n}\" shape=Mrecord, fontcolor=black]
+                    Vorgaenger [label=\"{ Ticket| geht vor\n}\" shape=Mrecord, fontcolor=black]
+                    Nachfolger [label=\"{ Ticket| folgt\n}\" shape=Mrecord, fontcolor=black]
+                    Blockierer [label=\"{ Ticket| blockiert\n}\" shape=Mrecord, fontcolor=black]
+                    Blockierter [label=\"{ Ticket| wird\\ngeblockt\n}\" shape=Mrecord, fontcolor=black]
+                    Duplikator [label=\"{ Ticket| dupliziert\n}\" shape=Mrecord, fontcolor=black]
+                    Duplizierter [label=\"{ Ticket| Original\n}\" shape=Mrecord, fontcolor=black]
+                    Kopierer [label=\"{ Ticket| kopiert\n}\" shape=Mrecord, fontcolor=black]
+                    Kopierter [label=\"{ Ticket| Original\n}\" shape=Mrecord, fontcolor=black]
 
                     Vater -> Kind [style=dotted, color=gray dir=back]
                     Vorgaenger -> Nachfolger [style=solid, color=black dir=from]
