@@ -4,12 +4,12 @@
   <%= check_box_tag("settings[show_relates]", nil, @settings["show_relates"]) %>
 </p>
 <p>
-  <%= label_tag('settings[show_dublicates]', l(:label_duplicates)) %>
-  <%= check_box_tag("settings[show_dublicates]", nil, @settings["show_dublicates"]) %>
+  <%= label_tag('settings[show_duplicates]', l(:label_duplicates)) %>
+  <%= check_box_tag("settings[show_duplicates]", nil, @settings["show_duplicates"]) %>
 </p>
 <p>
-  <%= label_tag('settings[show_dublicated]', l(:label_duplicated_by)) %>
-  <%= check_box_tag("settings[show_dublicated]", nil, @settings["show_dublicated"]) %>
+  <%= label_tag('settings[show_duplicated]', l(:label_duplicated_by)) %>
+  <%= check_box_tag("settings[show_duplicated]", nil, @settings["show_duplicated"]) %>
 </p>
 <p>
   <%= label_tag('settings[show_blocks]', l(:label_blocks)) %>
@@ -34,4 +34,8 @@
 <p>
   <%= label_tag('settings[show_copied_from]', l(:label_copied_from)) %>
   <%= check_box_tag("settings[show_copied_from]", nil, @settings["show_copied_from"]) %>
+</p>
+<p>
+  <%= label_tag('settings[show_copied_from]', l(:label_child_revision)) %>
+  <%= check_box_tag("settings[show_child]", nil, @settings["show_child"]) %>
 </p>
