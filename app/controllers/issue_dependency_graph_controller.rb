@@ -90,12 +90,15 @@ class IssueDependencyGraphController < ApplicationController
                     Duplizierter [label=\"{ Ticket| Original\n}\" shape=Mrecord, fontcolor=black]
                     Kopierer [label=\"{ Ticket| kopiert\n}\" shape=Mrecord, fontcolor=black]
                     Kopierter [label=\"{ Ticket| Original\n}\" shape=Mrecord, fontcolor=black]
+                    beziehung1 [label=\"{ Ticket| hat\\nbeziehung\\nzu\n}\" shape=Mrecord, fontcolor=black]
+                    beziehung2 [label=\"{ Ticket| hat\\nbeziehung\\nzu\n}\" shape=Mrecord, fontcolor=black]
 
                     Vater -> Kind [style=dotted, color=gray dir=back]
                     Vorgaenger -> Nachfolger [style=solid, color=black dir=from]
                     Blockierter -> Blockierer [style=solid, color=red, dir=back]
                     Duplikator -> Duplizierter [style=dotted, color=blue, dir=from]
                     Kopierer -> Kopierter [style=solid, color=blue, dir=from]
+                    beziehung1 -> beziehung2 [style=dotted, color=black, dir=none]
                   }"
 
 			io.puts "}"
