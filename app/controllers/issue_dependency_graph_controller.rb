@@ -1,47 +1,56 @@
+#DepGraphLogger = Logger.new(Rails.root.join('log/deps.log'))
+#DepGraphLogger.debug "RELATION: all_issues_item[#{id.to_i}]"
+
 class IssueDependencyGraphController < ApplicationController
 	unloadable
 
 	def issue_graph()
-        all_issues = {}
-        params["issues"].each do |id|
-            all_issues[id.to_i] = Issue.find(id.to_i)
-        end
+
+	if params["issues"] then
+
+        	all_issues = {}
+        	params["issues"].each do |id|
+	            all_issues[id.to_i] = Issue.find(id.to_i)
+        	end
 
 		relevant_issues = []
 		relations = []
 
-        allowed_types = {}
+	        allowed_types = {}
 
-        if Setting.plugin_redmine_issue_dependency_graph["show_relates"] then allowed_types['relates'] = true end
-        if Setting.plugin_redmine_issue_dependency_graph["show_duplicates"] then allowed_types['duplicates'] = true end
-        if Setting.plugin_redmine_issue_dependency_graph["show_duplicated"] then allowed_types['duplicated'] = true end
-        if Setting.plugin_redmine_issue_dependency_graph["show_blocks"] then allowed_types['blocks'] = true end
-        if Setting.plugin_redmine_issue_dependency_graph["show_blocked"] then allowed_types['blocked'] = true end
-        if Setting.plugin_redmine_issue_dependency_graph["show_follows"] then allowed_types['follows'] = true end
-        if Setting.plugin_redmine_issue_dependency_graph["show_precedes"] then allowed_types['precedes'] = true end
-        if Setting.plugin_redmine_issue_dependency_graph["show_copied_to"] then allowed_types['copied_to'] = true end
-        if Setting.plugin_redmine_issue_dependency_graph["show_copied_from"] then allowed_types['copied_from'] = true end
-
-
-		IssueRelation.all.each do |ir|
-			if all_issues[ir.issue_from_id] and all_issues[ir.issue_to_id] and allowed_types[ir.relation_type]
-				relations << { :from => ir.issue_from_id, :to => ir.issue_to_id, :type => ir.relation_type }
-				relevant_issues << all_issues[ir.issue_from_id]
-				relevant_issues << all_issues[ir.issue_to_id]
+	        if Setting.plugin_redmine_issue_dependency_graph["show_relates"] then allowed_types['relates'] = true end
+	        if Setting.plugin_redmine_issue_dependency_graph["show_duplicates"] then allowed_types['duplicates'] = true end
+	        if Setting.plugin_redmine_issue_dependency_graph["show_duplicated"] then allowed_types['duplicated'] = true end
+	        if Setting.plugin_redmine_issue_dependency_graph["show_blocks"] then allowed_types['blocks'] = true end
+	        if Setting.plugin_redmine_issue_dependency_graph["show_blocked"] then allowed_types['blocked'] = true end
+	        if Setting.plugin_redmine_issue_dependency_graph["show_follows"] then allowed_types['follows'] = true end
+	        if Setting.plugin_redmine_issue_dependency_graph["show_precedes"] then allowed_types['precedes'] = true end
+	        if Setting.plugin_redmine_issue_dependency_graph["show_copied_to"] then allowed_types['copied_to'] = true end
+	        if Setting.plugin_redmine_issue_dependency_graph["show_copied_from"] then allowed_types['copied_from'] = true end
+	
+	
+			IssueRelation.all.each do |ir|
+				if all_issues[ir.issue_from_id] and all_issues[ir.issue_to_id] and allowed_types[ir.relation_type]
+					relations << { :from => ir.issue_from_id, :to => ir.issue_to_id, :type => ir.relation_type }
+					relevant_issues << all_issues[ir.issue_from_id]
+					relevant_issues << all_issues[ir.issue_to_id]
+				end
 			end
-		end
-
-        if Setting.plugin_redmine_issue_dependency_graph["show_child"] then
-    		all_issues.values.each do |i|
-    			if i.parent_id and all_issues[i.id] and all_issues[i.parent_id]
-    				relations << { :from => i.parent_id, :to => i.id, :type => 'child' }
-    				relevant_issues << all_issues[i.id]
-    				relevant_issues << all_issues[i.parent_id]
-    			end
-    		end
-        end
-
-     	render_graph(relevant_issues, relations)
+	
+	        if Setting.plugin_redmine_issue_dependency_graph["show_child"] then
+	    		all_issues.values.each do |i|
+	    			if i.parent_id and all_issues[i.id] and all_issues[i.parent_id]
+	    				relations << { :from => i.parent_id, :to => i.id, :type => 'child' }
+	    				relevant_issues << all_issues[i.id]
+	    				relevant_issues << all_issues[i.parent_id]
+	    			end
+	    		end
+	        end
+	
+	     	render_graph(relevant_issues, relations)
+	else
+		render_graph([], [])
+	end
 	end
 
 
