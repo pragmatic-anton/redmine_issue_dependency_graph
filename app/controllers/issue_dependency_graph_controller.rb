@@ -79,7 +79,7 @@ class IssueDependencyGraphController < ApplicationController
 			io.binmode
 			io.puts "digraph redmine {"
 
-            io.puts "subgraph cluster_01 { label = \"Ticketbeziehungen:\""
+            io.puts "subgraph cluster_01 { label = \"Issue dependencies:\""
 
 			issues.uniq.each do |i|
 				colour = i.closed? ? 'grey' : 'black'
@@ -105,26 +105,26 @@ class IssueDependencyGraphController < ApplicationController
 
             #make the Graph Key:
             io.puts "subgraph cluster_02 {
-                    label = \"Legende:\"
-                    Vater [label=\"{ Ticket| Task\n}\" shape=Mrecord, fontcolor=black]
-                    Kind [label=\"{ Ticket| Subtask\n}\" shape=Mrecord, fontcolor=black]
-                    Vorgaenger [label=\"{ Ticket| geht vor\n}\" shape=Mrecord, fontcolor=black]
-                    Nachfolger [label=\"{ Ticket| folgt\n}\" shape=Mrecord, fontcolor=black]
-                    Blockierer [label=\"{ Ticket| blockiert\n}\" shape=Mrecord, fontcolor=black]
-                    Blockierter [label=\"{ Ticket| wird\\ngeblockt\n}\" shape=Mrecord, fontcolor=black]
-                    Duplikator [label=\"{ Ticket| dupliziert\n}\" shape=Mrecord, fontcolor=black]
-                    Duplizierter [label=\"{ Ticket| Original\n}\" shape=Mrecord, fontcolor=black]
-                    Kopierer [label=\"{ Ticket| kopiert\n}\" shape=Mrecord, fontcolor=black]
-                    Kopierter [label=\"{ Ticket| Original\n}\" shape=Mrecord, fontcolor=black]
-                    beziehung1 [label=\"{ Ticket| hat\\nbeziehung\\nzu\n}\" shape=Mrecord, fontcolor=black]
-                    beziehung2 [label=\"{ Ticket| hat\\nbeziehung\\nzu\n}\" shape=Mrecord, fontcolor=black]
+                    label = \"Caption:\"
+                    Parent [label=\"{ Issue| Task\n}\" shape=Mrecord, fontcolor=black]
+                    Child [label=\"{ Issue| Subtask\n}\" shape=Mrecord, fontcolor=black]
+                    Predecessor [label=\"{ Issue| Precedes\n}\" shape=Mrecord, fontcolor=black]
+                    Successor [label=\"{ Issue| Follows\n}\" shape=Mrecord, fontcolor=black]
+                    Blocker [label=\"{ Issue| Blocks\n}\" shape=Mrecord, fontcolor=black]
+                    Blocked [label=\"{ Issue| Blocked by\n}\" shape=Mrecord, fontcolor=black]
+                    Duplicator [label=\"{ Issue| Has duplicate\n}\" shape=Mrecord, fontcolor=black]
+                    Duplicate [label=\"{ Issue| Is duplicate of\n}\" shape=Mrecord, fontcolor=black]
+                    Copier [label=\"{ Issue| Copied to\n}\" shape=Mrecord, fontcolor=black]
+                    Copied [label=\"{ Issue| Copied from\n}\" shape=Mrecord, fontcolor=black]
+                    Relationship1 [label=\"{ Issue| Related to\n}\" shape=Mrecord, fontcolor=black]
+                    Relationship2 [label=\"{ Issue| Related to\n}\" shape=Mrecord, fontcolor=black]
 
-                    Vater -> Kind [style=dotted, color=gray dir=back]
-                    Vorgaenger -> Nachfolger [style=solid, color=black dir=from]
-                    Blockierter -> Blockierer [style=solid, color=red, dir=back]
-                    Duplikator -> Duplizierter [style=dotted, color=blue, dir=from]
-                    Kopierer -> Kopierter [style=solid, color=blue, dir=from]
-                    beziehung1 -> beziehung2 [style=dotted, color=black, dir=none]
+                    Parent -> Child [style=dotted, color=gray dir=back]
+                    Predecessor -> Successor [style=solid, color=black dir=from]
+                    Blocker -> Blocked [style=solid, color=red, dir=back]
+                    Duplicator -> Duplicate [style=dotted, color=blue, dir=from]
+                    Copier -> Copied [style=solid, color=blue, dir=from]
+                    Relationship1 -> Relationship2 [style=dotted, color=black, dir=none]
                   }"
 
 			io.puts "}"
