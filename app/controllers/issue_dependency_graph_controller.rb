@@ -87,12 +87,12 @@ class IssueDependencyGraphController < ApplicationController
 
       relations.each do |ir|
         io.puts case ir[:type]
-                when 'blocks'   then "#{ir[:to]} -> #{ir[:from]} [style=solid,  color=red dir=back]"
+                when 'blocks'   then "#{ir[:from]} -> #{ir[:to]} [style=solid,  color=red dir=back]"
                 when 'child'    then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=gray dir=back]"
                 when 'precedes' then "#{ir[:from]} -> #{ir[:to]} [style=solid,  color=black dir=from]"
                 when 'relates'  then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=black dir=none]"
-                when 'duplicates' then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=blue dir=from]"
-                when 'duplicated' then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=blue dir=back]"
+                when 'duplicates' then "#{ir[:to]} -> #{ir[:from]} [style=dotted, color=blue dir=back]"
+                when 'duplicated' then "#{ir[:to]} -> #{ir[:from]} [style=dotted, color=blue dir=from]"
                 when 'copied_to' then "#{ir[:from]} -> #{ir[:to]} [style=solid, color=blue dir=from]"
                 when 'copied_from' then "#{ir[:from]} -> #{ir[:to]} [style=solid, color=blue dir=back]"
                 else "#{ir[:from]} -> #{ir[:to]} [style=bold, color=pink]"
@@ -119,7 +119,7 @@ class IssueDependencyGraphController < ApplicationController
               Parent -> Child [style=dotted, color=gray dir=back]
               Predecessor -> Successor [style=solid, color=black dir=from]
               Blocker -> Blocked [style=solid, color=red, dir=back]
-              Duplicator -> Duplicate [style=dotted, color=blue, dir=from]
+              Duplicator -> Duplicate [style=dotted, color=blue, dir=back]
               Copier -> Copied [style=solid, color=blue, dir=from]
               Relationship1 -> Relationship2 [style=dotted, color=black, dir=none]
             }"
