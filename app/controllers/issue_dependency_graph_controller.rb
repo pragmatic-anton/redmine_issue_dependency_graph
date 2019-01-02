@@ -70,9 +70,9 @@ class IssueDependencyGraphController < ApplicationController
   private
 
   def render_graph(issues, relations)
-    png = nil
+    graph_output = nil
 
-    IO.popen('unflatten | dot -Tpng', 'r+') do |io|
+    IO.popen('unflatten | dot -Tsvg', 'r+') do |io|
       io.binmode
       io.puts 'digraph redmine {'
 
@@ -126,9 +126,9 @@ class IssueDependencyGraphController < ApplicationController
 
       io.puts '}'
       io.close_write
-      png = io.read
+      graph_output = io.read
     end
-    send_data png, type: 'image/png', filename: 'graph.png', disposition: 'inline'
+    send_data graph_output, type: 'image/svg+xml', filename: 'graph.svg', disposition: 'inline'
   end
 
   def render_title(i)
