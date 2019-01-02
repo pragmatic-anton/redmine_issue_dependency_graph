@@ -6,9 +6,9 @@ Once the plugin is installed, a Link will show up in the Sidebar of the Issues P
 
 # Installation requirements
 
-## Redmine 3.0.3
+## Redmine 4.0.0
 
-This plugin was made to work with Redmine 3.0.3
+This plugin was made to work with Redmine 4.0.0
 
 
 
@@ -21,4 +21,4 @@ plugin will work at all.
 
 # Acknowledgements
 
-This is a Fork from github User mpalmer
+This is a Fork of [tpip's Redmine Issue Dependency Graph](https://github.com/tpip/redmine_issue_dependency_graph), itself a fork of [mpalmer's Redmine Issue Dependency Graph](https://github.com/mpalmer/redmine_issue_dependency_graph)
