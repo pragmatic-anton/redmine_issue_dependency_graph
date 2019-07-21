@@ -2,7 +2,7 @@ DEPGRAPHLOGGER = Logger.new(Rails.root.join('log/deps.log'))
 # DepGraphLogger.debug "RELATION: all_issues_item[#{id.to_i}]"
 
 class IssueDependencyGraphController < ApplicationController
-  unloadable
+  add_template_helper GraphHelper
 
   before_action :find_issue_by_id, :authorize, only: [:issue_graph]
   before_action :authorize, except: [:issue_graph]
@@ -64,74 +64,24 @@ class IssueDependencyGraphController < ApplicationController
     DEPGRAPHLOGGER.info "RELATION: relevant_issues: #{relevant_issues}"
     DEPGRAPHLOGGER.info "RELATION: relations: #{relations}"
 
-    render_graph(relevant_issues, relations)
+    render_graph(render_dot_to_string(relevant_issues, relations))
   end
 
   private
 
-  def render_graph(issues, relations)
+  def render_dot_to_string(issues, relations)
+    render_to_string "graph/digraph", layout: false, :formats => [:text], :locals => {:issues => issues, :relations => relations}
+  end
+
+  def render_graph(dot_code)
     graph_output = nil
-
-    IO.popen('unflatten | dot -Tsvg', 'r+') do |io|
+    IO.popen('unflatten | dot -Tsvg ', 'r+') do |io|
       io.binmode
-      io.puts 'digraph redmine {'
-
-      io.puts 'subgraph cluster_01 { label = "Issue dependencies:"'
-
-      issues.uniq.each do |i|
-        colour = i.closed? ? 'grey' : 'black'
-        state = IssueStatus.find(Issue.find(i.id).status_id).name
-        percent = Issue.find(i.id).done_ratio.to_s
-        io.puts "#{i.id} [label=\"{ #{i.tracker.name}: ##{i.id} | #{state}, #{percent}% done | #{render_title(i)}\n}\" shape=Mrecord, fontcolor=#{colour}]"
-      end
-
-      relations.each do |ir|
-        io.puts case ir[:type]
-                when 'blocks'   then "#{ir[:from]} -> #{ir[:to]} [style=solid,  color=red dir=back]"
-                when 'child'    then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=gray dir=back]"
-                when 'precedes' then "#{ir[:from]} -> #{ir[:to]} [style=solid,  color=black dir=from]"
-                when 'relates'  then "#{ir[:from]} -> #{ir[:to]} [style=dotted, color=black dir=none]"
-                when 'duplicates' then "#{ir[:to]} -> #{ir[:from]} [style=dotted, color=blue dir=back]"
-                when 'duplicated' then "#{ir[:to]} -> #{ir[:from]} [style=dotted, color=blue dir=from]"
-                when 'copied_to' then "#{ir[:from]} -> #{ir[:to]} [style=solid, color=blue dir=from]"
-                when 'copied_from' then "#{ir[:from]} -> #{ir[:to]} [style=solid, color=blue dir=back]"
-                else "#{ir[:from]} -> #{ir[:to]} [style=bold, color=pink]"
-        end
-      end
-      io.puts '}'
-
-      # make the Graph Key:
-      io.puts "subgraph cluster_02 {
-              label = \"Caption:\"
-              Parent [label=\"{ Issue| Task\n}\" shape=Mrecord, fontcolor=black]
-              Child [label=\"{ Issue| Subtask\n}\" shape=Mrecord, fontcolor=black]
-              Predecessor [label=\"{ Issue| Precedes\n}\" shape=Mrecord, fontcolor=black]
-              Successor [label=\"{ Issue| Follows\n}\" shape=Mrecord, fontcolor=black]
-              Blocker [label=\"{ Issue| Blocks\n}\" shape=Mrecord, fontcolor=black]
-              Blocked [label=\"{ Issue| Blocked by\n}\" shape=Mrecord, fontcolor=black]
-              Duplicator [label=\"{ Issue| Has duplicate\n}\" shape=Mrecord, fontcolor=black]
-              Duplicate [label=\"{ Issue| Is duplicate of\n}\" shape=Mrecord, fontcolor=black]
-              Copier [label=\"{ Issue| Copied to\n}\" shape=Mrecord, fontcolor=black]
-              Copied [label=\"{ Issue| Copied from\n}\" shape=Mrecord, fontcolor=black]
-              Relationship1 [label=\"{ Issue| Related to\n}\" shape=Mrecord, fontcolor=black]
-              Relationship2 [label=\"{ Issue| Related to\n}\" shape=Mrecord, fontcolor=black]
-
-              Parent -> Child [style=dotted, color=gray dir=back]
-              Predecessor -> Successor [style=solid, color=black dir=from]
-              Blocker -> Blocked [style=solid, color=red, dir=back]
-              Duplicator -> Duplicate [style=dotted, color=blue, dir=back]
-              Copier -> Copied [style=solid, color=blue, dir=from]
-              Relationship1 -> Relationship2 [style=dotted, color=black, dir=none]
-            }"
-
-      io.puts '}'
+      io.puts dot_code
       io.close_write
       graph_output = io.read
     end
     send_data graph_output, type: 'image/svg+xml', filename: 'graph.svg', disposition: 'inline'
   end
 
-  def render_title(i)
-    i.subject.chomp.gsub(/((?:[^ ]+ ){4})/, '\\1\\n').gsub('"', '\\"')
-  end
 end

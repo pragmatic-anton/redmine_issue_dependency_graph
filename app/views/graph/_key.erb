@@ -1,0 +1,22 @@
+subgraph cluster_02 {
+  label = "Caption2:"
+  Parent [label="{ Issue| Task\n}" shape=Mrecord, fontcolor=black]
+  Child [label="{ Issue| Subtask\n}" shape=Mrecord, fontcolor=black]
+  Predecessor [label="{ Issue| Precedes\n}" shape=Mrecord, fontcolor=black]
+  Successor [label="{ Issue| Follows\n}" shape=Mrecord, fontcolor=black]
+  Blocker [label="{ Issue| Blocks\n}" shape=Mrecord, fontcolor=black]
+  Blocked [label="{ Issue| Blocked by\n}" shape=Mrecord, fontcolor=black]
+  Duplicator [label="{ Issue| Has duplicate\n}" shape=Mrecord, fontcolor=black]
+  Duplicate [label="{ Issue| Is duplicate of\n}" shape=Mrecord, fontcolor=black]
+  Copier [label="{ Issue| Copied to\n}" shape=Mrecord, fontcolor=black]
+  Copied [label="{ Issue| Copied from\n}" shape=Mrecord, fontcolor=black]
+  Relationship1 [label="{ Issue| Related to\n}" shape=Mrecord, fontcolor=black]
+  Relationship2 [label="{ Issue| Related to\n}" shape=Mrecord, fontcolor=black]
+
+  Parent -> Child [style=dotted, color=gray dir=back]
+  Predecessor -> Successor [style=solid, color=black dir=from]
+  Blocker -> Blocked [style=solid, color=red, dir=back]
+  Duplicator -> Duplicate [style=dotted, color=blue, dir=back]
+  Copier -> Copied [style=solid, color=blue, dir=from]
+  Relationship1 -> Relationship2 [style=dotted, color=black, dir=none]
+}

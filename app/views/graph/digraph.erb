@@ -1,0 +1,17 @@
+digraph redmine {
+
+  subgraph cluster_01 {
+    label = "Issue dependenciess:"
+
+    <% issues.each do |issue| %>
+      <%= render_issue_node(issue) %>
+    <% end %>
+
+    <% relations.each do |relation| %>
+      <%= render_relation(relation) %>
+    <% end %>
+
+  }
+
+  <%= render "graph/key" %>
+}
