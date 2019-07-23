@@ -19,15 +19,20 @@ class IssueDependencyGraphController < ApplicationController
     DEPGRAPHLOGGER.info "RELATION: #{@issue}"
     DEPGRAPHLOGGER.info "RELATION: Params: #{params}"
 
-    all_issues = {}
 
     if params['issue_id']
-      all_issues[@issue.id.to_i] = Issue.find(@issue.id.to_i)
+      ids = find_all_related(params['issue_id'])
+      highlight =  params['issue_id'].kind_of?(Array) ? params['issue_id'] : [params['issue_id']]
     else
-      params['issues'].each do |id|
-        all_issues[id.to_i] = Issue.find(id.to_i)
-      end
+      ids = params['issues'];
+      highlight = []
     end
+
+    all_issues = {}
+    ids.each do |id|
+      all_issues[id.to_i] = Issue.find(id.to_i)
+    end
+
 
     relevant_issues = []
     relations = []
@@ -64,13 +69,36 @@ class IssueDependencyGraphController < ApplicationController
     DEPGRAPHLOGGER.info "RELATION: relevant_issues: #{relevant_issues}"
     DEPGRAPHLOGGER.info "RELATION: relations: #{relations}"
 
-    render_graph(render_dot_to_string(relevant_issues, relations))
+     #render  plain: highlight
+     render_graph(render_dot_to_string(relevant_issues, relations, highlight))
   end
 
   private
 
-  def render_dot_to_string(issues, relations)
-    render_to_string "graph/digraph", layout: false, :formats => [:text], :locals => {:issues => issues, :relations => relations}
+  def find_all_related(id)
+    @related_issues = [] if @related_issues.nil?
+
+    # issue already visited ?
+    if @related_issues.include? id
+      return
+    else
+      @related_issues.push id
+    end
+
+    node = Issue.find(id)
+
+    blockers = node.relations_to.where(:relation_type => IssueRelation::TYPE_BLOCKS).map {|rel| Issue.find(rel.issue_from_id)  }
+
+    (node.ancestors + node.descendants + blockers).each { |i|
+      find_all_related(i.id)
+    }
+
+    return @related_issues
+  end
+
+  def render_dot_to_string(issues, relations, highlight)
+    highlight = highlight.map(&:to_i)
+    render_to_string "graph/digraph", layout: false, :formats => [:text], :locals => {:issues => issues, :relations => relations, :highlight => highlight}
   end
 
   def render_graph(dot_code)

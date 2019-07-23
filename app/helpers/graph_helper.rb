@@ -1,16 +1,20 @@
 module GraphHelper
 
-  def render_issue_node(i)
+  def render_issue_node(i, highlight)
     colour = i.closed? ? 'grey' : 'black'
     state = IssueStatus.find(Issue.find(i.id).status_id).name
     percent = Issue.find(i.id).done_ratio.to_s
-    n = "#{i.id} [label=\"{ #{i.tracker.name}: ##{i.id} | #{state}, #{percent}% done | #{render_title(i)}\n}\" shape=Mrecord, fontcolor=#{colour}  "
+    n = "#{i.id} [label=\"{ ##{i.id}  #{render_title(i)} | #{i.tracker.name}, #{state}, #{percent}% done \n}\" shape=Mrecord fontcolor=#{colour}  "
+    n += " color=cyan "  if highlight.include? i.id
     n += "href=\"/issues/#{i.id}\""
     n += "]"
   end
 
   def render_title(i)
-    i.subject.chomp.gsub(/((?:[^ ]+ ){4})/, '\\1\\n').gsub('"', '\\"')
+    i.subject
+        .chomp
+        .gsub(/((?:[^ ]+ ){4})/, '\\1\\n') # split by 4 words
+        .gsub('"', '\\"')
   end
 
   def render_relation(ir)
